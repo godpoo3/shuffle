@@ -54,11 +54,18 @@ class ShuffleLunch
     private function readFile()
     {
         $staff = [];
+        $file = fopen("member_list.csv", "r");
+        while($data = fgetcsv($file)) {
+          $member_list[] = $data[0];
+        }
+
         try {
-            $file = new SplFileObject($this->path . $this->filename);
-            $file->setFlags(SplFileObject::READ_CSV);
+            //$file = new SplFileObject($this->path . $this->filename);
+            //$file->setFlags(SplFileObject::READ_CSV);
+
             foreach ($file as $line) {
-                $staff['name'][] = preg_replace('/(　|\s)/u', '', $line[2]);
+                //$staff['name'][] = preg_replace('/(　|\s)/u', '', $line[2]);
+                $staff['name'][] = $member_list;
             }
             return $staff;
         } catch (Exception $e) {
@@ -147,6 +154,7 @@ class ShuffleLunch
         for ($i = 0; $i < count($memberList); $i++) {
             $day = (string)($nextMonday + $this->plus_day[$i % 6]);
             $key = $month . '/' . $day .'(' . $this->week_day[$i % 3] . ')';
+            //var_dump($memberList);die;
             $finishList[$key][] = implode(', ', $memberList[$i]);
         }
         return $finishList;
